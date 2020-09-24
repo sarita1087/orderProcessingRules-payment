@@ -1,0 +1,72 @@
+package rules
+ 
+import com.devapp.payment.model.PaymentDetails
+
+
+rule "Rules for Physical Product"
+	when 
+		productObject: PaymentDetails(type == "physical product")
+	then
+		productObject.setPackingSlip("Generate a packing slip for shipping :" + productObject.getPaymentType());
+		generatePackingSlipForShipping(productObject);
+		generateCommissionPaymentForAgent(productObject);
+	end
+
+rule "Rule for Book"
+	when 
+		productObject: PaymentDetails(type == "book")
+	then
+		productObject.setPackingSlip("Generate a packing slip for royalty department :" + productObject.getPaymentType());
+		generatePackingSlipForRoyaltyDept(productObject);
+		generateCommissionPaymentForAgent(productObject);
+	end
+
+rule "Rule for Membership"
+	when
+		productObject: PaymentDetails(type == "membership")
+	then
+		productObject.setMessage("Activate the membership for the user :" + productObject.getMessage());
+		//activate membership and send mail to user. 
+		activateMemberShip(productObject);
+		sendEmail(productObject);
+	end
+
+rule "Rule for Upgrade Membership"
+	when
+		productObject: PaymentDetails(type == "upgrade membership")
+	then
+		productObject.setMessage("upgrade member ship for the user :" + productObject.getMessage());
+		// upgrade membership and send mail to user. 
+	    upgradeMemberShip(productObject);
+	    sendEmail(productObject);
+	end
+
+rule "Rule for Video"
+	when
+		productObject: PaymentDetails(type == "video")
+	then
+		productObject.setMessage("add a free First Aid video to the packing slip (the result of a court decision in 1997).:" + productObject.getMessage());
+	end
+
+function void generatePackingSlipForShipping(PaymentDetails paymanetDetails) {
+    System.out.println("generating packing slip for Shipping Logic will be here");
+}
+function void generatePackingSlipForRoyaltyDept(PaymentDetails paymanetDetails) {
+    System.out.println("generating packing slip for royalty department Logic will be here");
+}
+
+function void activateMemberShip(PaymentDetails paymanetDetails) {
+    System.out.println("activate membership logic will be here");
+}
+
+function void upgradeMemberShip(PaymentDetails paymanetDetails) {
+    System.out.println("upgrade membership logic will be here");
+}
+
+function void sendEmail(PaymentDetails paymanetDetails) {
+    System.out.println("send email to user logic will be here");
+}
+
+function void generateCommissionPaymentForAgent(PaymentDetails paymanetDetails) {
+    System.out.println("generate a commission payment to the agent logic will be here .");
+}
